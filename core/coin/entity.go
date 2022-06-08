@@ -4,7 +4,7 @@ package coin
 type Risk int
 
 type Coin struct {
-	Id  int64  `json:"id"`
+	Id  int  `json:"id"`
 	Name  string  `json:"name"`
 	Value  int32  `json:"value"`
 	Risk  Risk  `json:"risk"`
