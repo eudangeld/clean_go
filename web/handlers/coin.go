@@ -58,6 +58,7 @@ func insertCoin(service coin.UseCase) http.Handler {
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
+			
 
 			w.WriteHeader(http.StatusCreated)
 		})
