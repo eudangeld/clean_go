@@ -1,4 +1,4 @@
-package beer
+package coin
 
 import (
 	"database/sql"

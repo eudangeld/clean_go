@@ -1,4 +1,4 @@
-package beer
+package coin
 
 
 type Risk int
