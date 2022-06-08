@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/codegangsta/negroni"
 	"github.com/eudangeld/clean_go/core/coin"
+	"github.com/eudangeld/clean_go/web/handlers"
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -29,10 +29,11 @@ func main () {
 	r:= mux.NewRouter()
 	n := negroni.New(negroni.NewLogger())
 
-	r.Handle("/v1/coin", n.With(
-		negroni.Wrap(coinHandler(service)),
-	)).Methods("GET", "OPTIONS")
+	
+	//init handler for cois
+	handlers.MakeCoinHandlers(r, n, service)
 	http.Handle("/", r)
+
 	srv := &http.Server{
 		ReadTimeout: 30* time.Second,
 		WriteTimeout: 30* time.Second,
@@ -48,12 +49,3 @@ func main () {
   
 }
 
-
-func coinHandler(service coin.UseCase) http.Handler {
-	return http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {
-		books, _ := service.GetAll()
-		for _, b := range books {
-			fmt.Println(b)
-		}
-	})
-}
