@@ -6,9 +6,9 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-type Usecase interface {
+type UseCase interface {
 	GetAll()([]*Coin, error)
-	Get(ID int64)(*Coin, error)
+	Get(ID int)(*Coin, error)
 	Store(c *Coin) error
 }
 
@@ -16,7 +16,7 @@ type Service struct {
 	DB *sql.DB
 }
 
-func NewService (db *sql.DB)*Service {
+func NewService (db *sql.DB) *Service {
 	return &Service{
 		DB:db,
 	}
