@@ -34,10 +34,13 @@ func main () {
 	handlers.MakeCoinHandlers(r, n, service)
 	http.Handle("/", r)
 
+	port:=os.Getenv("PORT")
+
+
 	srv := &http.Server{
 		ReadTimeout: 30* time.Second,
 		WriteTimeout: 30* time.Second,
-		Addr: ":4000",
+		Addr: ":"+port,
 		Handler: http.DefaultServeMux,
 		ErrorLog: log.New(os.Stderr,"Logger", log.Lshortfile),
 	}
