@@ -2,6 +2,8 @@ package coin
 
 import (
 	"database/sql"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type Usecase interface {
@@ -62,7 +64,7 @@ func (s *Service) Get(ID int)(*Coin, error){
 	return &c,nil
 }
 
-func (s *Service) Store(c Coin)(error){
+func (s *Service) Store(c *Coin)(error){
 
 	tx,err := s.DB.Begin()
 
