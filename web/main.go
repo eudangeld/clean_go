@@ -36,7 +36,11 @@ func main () {
 
 	port:=os.Getenv("PORT")
 
-
+	if port == "" {
+		log.Fatal("Server port not defined exitting")
+	}
+	
+	
 	srv := &http.Server{
 		ReadTimeout: 30* time.Second,
 		WriteTimeout: 30* time.Second,
@@ -44,11 +48,14 @@ func main () {
 		Handler: http.DefaultServeMux,
 		ErrorLog: log.New(os.Stderr,"Logger", log.Lshortfile),
 	}
-
+	
+	log.Println("Server started at:localhost:" + port)
 	err = srv.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)
 	}
+	
+
   
 }
 
