@@ -4,7 +4,8 @@ package user
 CREATE TABLE userr (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	email text NOT NULL,
-	role integer NOT NULL
+	role integer NOT NULL,
+	pass text NOT NULL
 );
 */
 
@@ -12,6 +13,7 @@ type User struct {
 	Id int `json:"id"`
 	Email string `json:"email"`
 	Role int `json:"role"`
+	Pass string `json:"pass"`
 }
 
 type Role int
