@@ -9,7 +9,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func TestStore(t *testing.T) {
+func TestSignup(t *testing.T) {
 	u:= &user.User{
 		Id: 1,
 		Email: "asd@asd.com.br",
