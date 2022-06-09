@@ -13,7 +13,7 @@ type User struct {
 	Id int `json:"id"`
 	Email string `json:"email"`
 	Role int `json:"role"`
-	Pass string `json:"pass"`
+	Pass string `json:"-"` //ignore this field on encode :)
 }
 
 type Role int

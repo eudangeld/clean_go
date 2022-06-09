@@ -9,6 +9,7 @@ import (
 
 	"github.com/codegangsta/negroni"
 	"github.com/eudangeld/clean_go/core/coin"
+	"github.com/eudangeld/clean_go/core/user"
 	"github.com/eudangeld/clean_go/web/handlers"
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
@@ -24,14 +25,16 @@ func main () {
 	defer db.Close()
 
 
-	service := coin.NewService(db)
+	coinService := coin.NewService(db)
+	userService := user.NewUserService(db)
 
 	r:= mux.NewRouter()
 	n := negroni.New(negroni.NewLogger())
 
 	
 	//init handler for cois
-	handlers.MakeCoinHandlers(r, n, service)
+	handlers.MakeCoinHandlers(r, n, coinService)
+	handlers.MakeUserHandler(r, n, userService)
 	http.Handle("/", r)
 
 	port:=os.Getenv("PORT")

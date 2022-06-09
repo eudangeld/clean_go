@@ -45,7 +45,7 @@ func getAllCoin(service coin.UseCase) http.Handler {
 func insertCoin(service coin.UseCase) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
-			fmt.Println("Post new coin")
+			fmt.Println("Post new")
 			var coin coin.Coin
 
 			err:= json.NewDecoder(r.Body).Decode(&coin)
@@ -58,7 +58,6 @@ func insertCoin(service coin.UseCase) http.Handler {
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-			
 
 			w.WriteHeader(http.StatusCreated)
 		})
