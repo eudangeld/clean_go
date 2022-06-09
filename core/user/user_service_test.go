@@ -11,7 +11,6 @@ import (
 
 func TestSignup(t *testing.T) {
 	u:= &user.User{
-		Id: 1,
 		Email: "asd@asd.com.br",
 		Role: 1,
 		Pass: "asdasd",
@@ -44,18 +43,42 @@ func TestSignup(t *testing.T) {
 	if(err != nil){
 		t.Fatalf("Error saving user into database: %s", err.Error())
 	}
-	
-	saved,err :=service.GetUser(u.Id);
 
+}
+
+
+
+func TestLogin(t *testing.T) {
+	u:= &user.User{
+		Id: 1,
+		Email: "asd@asd.com.br",
+		Role: 1,
+		Pass: "asdasd",
+	}
+	db,err := sql.Open("sqlite3", "../../data/coin_test.db")
+	defer db.Close()
 	
+	
+	if err != nil {
+		t.Fatalf("Error creating table: %s",err)
+	}
+
+	err = clearDb(db)
+
+	service := user.NewUserService(db)
+	err = service.Signup(u.Email, u.Pass, u.Role)
+
+	loggedUser,err := service.Login(u.Email, u.Pass)
 
 	
 	if err != nil{
-		t.Fatalf("Error getting data from database: %s", err.Error())
+		t.Fatalf("Loggin error: %s", err.Error())
 	}
-	
-	if saved.Id != 1{
-		t.Fatalf("Invalid data: %s", err.Error())
+
+
+
+	if loggedUser.Email != u.Email{
+		t.Fatalf("Email not match: %s", loggedUser.Email)
 	}
 
 }

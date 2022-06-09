@@ -8,7 +8,6 @@ import (
 )
 
 type UseCase interface {
-	GetUser(ID int)(*User, error)	
 	Login(Email string, Pass string)(*User, error)	
 	Signup(Email string, Pass string, Role int)(error)	
 }
@@ -24,36 +23,23 @@ func NewUserService(db *sql.DB) *UserService {
 	}
 }
 
-func (s *UserService)GetUser(ID int)(*User, error) {
-	var u User
-	stmt, err := s.DB.Prepare("SELECT id, email, role from userr where id = ?")
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-	err = stmt.QueryRow(ID).Scan(&u.Id, &u.Email, &u.Role)
-	if err != nil {
-		return nil, err
-	}
-	return &u, nil
-}
 
 func (s *UserService)Signup(Email string, Pass string, Role int)(error) {
-	var u User
+	
 	bytePass := []byte(Pass)
 	saltedPass := hashPassword(bytePass)
 
 	tx,err := s.DB.Begin()
 
-	stmt, err := s.DB.Prepare("INSERT INTO userr (email, pass, role) values (?, ?, ?)")
+	stmt, err := s.DB.Prepare("INSERT INTO userr (email, pass, role) VALUES (?,?,?)")
 	if err != nil {
 		return err
 	}
 	
 
-	defer stmt.Close()	
+	defer stmt.Close()
 
-	_,err = stmt.Exec(u.Email, saltedPass, Role)
+	_,err = stmt.Exec(Email, saltedPass, Role)
 	if err != nil {
 		return err
 	}
@@ -64,16 +50,19 @@ func (s *UserService)Signup(Email string, Pass string, Role int)(error) {
 
 func (s *UserService)Login(Email string, Pass string)(*User, error)	{
 	var u User
-	stmt, err := s.DB.Prepare("SELECT id, email, role, pass from userr where email = ?")
+	stmt, err := s.DB.Prepare("SELECT * from userr where email = ?")
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
+	
 	err = stmt.QueryRow(Email).Scan(&u.Id, &u.Email, &u.Role, &u.Pass)
 	if err != nil {
 		return nil, err
 	}
+
 	if comparePasswords(u.Pass, []byte(Pass)) {
+		log.Println("Password Matched")
 		return &u, nil
 	}
 	return nil, nil
