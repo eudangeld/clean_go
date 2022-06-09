@@ -10,7 +10,7 @@ import (
 type UseCase interface {
 	GetUser(ID int)(*User, error)	
 	Login(Email string, Pass string)(*User, error)	
-	Signup(Email string, Pass string)(error)	
+	Signup(Email string, Pass string, Role int)(error)	
 }
 
 
@@ -26,7 +26,7 @@ func NewUserService(db *sql.DB) *UserService {
 
 func (s *UserService)GetUser(ID int)(*User, error) {
 	var u User
-	stmt, err := s.DB.Prepare("SELECT id, email, role from user where id = ?")
+	stmt, err := s.DB.Prepare("SELECT id, email, role from userr where id = ?")
 	if err != nil {
 		return nil, err
 	}
@@ -38,14 +38,14 @@ func (s *UserService)GetUser(ID int)(*User, error) {
 	return &u, nil
 }
 
-func (s *UserService)Signup(Email string, Pass string)(error) {
+func (s *UserService)Signup(Email string, Pass string, Role int)(error) {
 	var u User
 	bytePass := []byte(Pass)
 	saltedPass := hashPassword(bytePass)
 
 	tx,err := s.DB.Begin()
 
-	stmt, err := s.DB.Prepare("INSERT INTO user (email, pass) values (?, ?)")
+	stmt, err := s.DB.Prepare("INSERT INTO userr (email, pass, role) values (?, ?, ?)")
 	if err != nil {
 		return err
 	}
@@ -53,7 +53,7 @@ func (s *UserService)Signup(Email string, Pass string)(error) {
 
 	defer stmt.Close()	
 
-	_,err = stmt.Exec(u.Email, saltedPass)
+	_,err = stmt.Exec(u.Email, saltedPass, Role)
 	if err != nil {
 		return err
 	}
@@ -64,7 +64,7 @@ func (s *UserService)Signup(Email string, Pass string)(error) {
 
 func (s *UserService)Login(Email string, Pass string)(*User, error)	{
 	var u User
-	stmt, err := s.DB.Prepare("SELECT id, email, role, pass from user where email = ?")
+	stmt, err := s.DB.Prepare("SELECT id, email, role, pass from userr where email = ?")
 	if err != nil {
 		return nil, err
 	}
